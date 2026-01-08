@@ -1,30 +1,28 @@
-blog-api/
+src/
+├── domain/
+│   ├── entities/
+│   ├── value-objects/
+│   ├── errors/
+│   └── repositories/      ← interfaces
 │
-├── src/
-│   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── post.controller.js
-│   │   └── comment.controller.js
-│   │
-│   ├── models/
-│   │   ├── user.model.js
-│   │   ├── post.model.js
-│   │   └── comment.model.js
-│   │
-│   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── post.routes.js
-│   │   └── comment.routes.js
-│   │
-│   ├── middleware/
-│   │   ├── auth.middleware.js
-│   │   └── error.middleware.js
-│   │
-│   ├── config/
-│   │   └── db.js
-│   │
-│   └── app.js
+├── application/
+│   ├── use-cases/
+│   ├── services/
+│   └── dto/
 │
-├── .env
-├── server.js
-└── package.json
+├── interfaces/
+│   ├── http/
+│   │   ├── controllers/
+│   │   ├── presenters/
+│   │   └── validators/
+│
+├── infrastructure/
+│   ├── database/
+│   ├── repositories/
+│   ├── auth/
+│   └── external/
+│
+└── main/
+    ├── app.ts
+    ├── routes.ts
+    └── container.ts   ← DI wiring
