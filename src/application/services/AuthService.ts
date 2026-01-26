@@ -4,11 +4,9 @@ import * as jwt from 'jsonwebtoken';
 export class AuthService {
     private readonly saltRounds = 10;
     private readonly jwtSecret: string;
-    private readonly jwtExpiresIn: string;
 
     constructor() {
         this.jwtSecret = process.env.JWT_SECRET || 'default-secret-change-in-production';
-        this.jwtExpiresIn = process.env.JWT_EXPIRES_IN || '24h';
     }
 
     async hashPassword(password: string): Promise<string> {
@@ -20,18 +18,13 @@ export class AuthService {
     }
 
     generateToken(userId: string, email: string): string {
-        return jwt.sign(
-            { userId, email },
-            this.jwtSecret,
-            { expiresIn: this.jwtExpiresIn }
-        );
+        return jwt.sign({ userId, email }, this.jwtSecret, { expiresIn: '24h' });
     }
-
     verifyToken(token: string): { userId: string; email: string } {
         try {
             const decoded = jwt.verify(token, this.jwtSecret) as { userId: string; email: string };
             return decoded;
-        } catch (error) {
+        } catch (_error) {
             throw new Error('Invalid or expired token');
         }
     }

@@ -30,7 +30,7 @@ export class AuthMiddleware {
         }
     };
 
-    optionalAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
+    optionalAuth = (req: AuthRequest, _res: Response, next: NextFunction): void => {
         try {
             const authHeader = req.headers.authorization;
 
@@ -41,7 +41,7 @@ export class AuthMiddleware {
             }
 
             next();
-        } catch (error) {
+        } catch (_error) {
             // If token is invalid, just continue without user
             next();
         }
