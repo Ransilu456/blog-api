@@ -1,7 +1,7 @@
 // Repositories
-import { InMemoryUserRepository } from '../infrastructure/repositories/InMemoryUserRepository';
-import { InMemoryPostRepository } from '../infrastructure/repositories/InMemoryPostRepository';
-import { InMemoryCommentRepository } from '../infrastructure/repositories/InMemoryCommentRepository';
+import { MySQLUserRepository } from '../infrastructure/repositories/MySQLUserRepository';
+import { MySQLPostRepository } from '../infrastructure/repositories/MySQLPostRepository';
+import { MySQLCommentRepository } from '../infrastructure/repositories/MySQLCommentRepository';
 
 // Services
 import { AuthService } from '../application/services/AuthService';
@@ -25,10 +25,10 @@ import { CommentController } from '../interfaces/http/controllers/CommentControl
 import { AuthMiddleware } from '../infrastructure/auth/authMiddleware';
 
 export class Container {
-    // Repositories
-    public readonly userRepository = new InMemoryUserRepository();
-    public readonly postRepository = new InMemoryPostRepository();
-    public readonly commentRepository = new InMemoryCommentRepository();
+    // Repositories (MySQL)
+    public readonly userRepository = new MySQLUserRepository();
+    public readonly postRepository = new MySQLPostRepository();
+    public readonly commentRepository = new MySQLCommentRepository();
 
     // Services
     public readonly authService = new AuthService();
@@ -89,5 +89,5 @@ export class Container {
     );
 
     // Middleware
-    public readonly authMiddleware = new AuthMiddleware(this.authService);
+    public readonly authMiddleware = new AuthMiddleware();
 }

@@ -1,11 +1,10 @@
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { LoginUserDTO } from '../dto/LoginUserDTO';
 import { AuthService } from '../services/AuthService';
-import { AuthenticationError, NotFoundError } from '../../domain/errors/DomainErrors';
+import { AuthenticationError } from '../../domain/errors/DomainErrors';
 import { Email } from '../../domain/value-objects/Email';
 
 export interface LoginResult {
-    token: string;
     user: {
         id: string;
         email: string;
@@ -36,14 +35,7 @@ export class LoginUserUseCase {
             throw new AuthenticationError('Invalid email or password');
         }
 
-        // Generate token
-        const token = this.authService.generateToken(
-            user.id.getValue(),
-            user.email.getValue()
-        );
-
         return {
-            token,
             user: {
                 id: user.id.getValue(),
                 email: user.email.getValue(),

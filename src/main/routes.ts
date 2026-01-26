@@ -12,6 +12,7 @@ export function setupRoutes(container: Container): Router {
     // User routes
     router.post('/users/register', container.userController.register);
     router.post('/users/login', container.userController.login);
+    router.post('/users/logout', container.userController.logout);
     router.get('/users/profile', container.authMiddleware.authenticate, container.userController.getProfile);
 
     // Post routes

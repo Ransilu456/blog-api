@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import '../../../types/session'; // Import session type definitions
 import { RegisterUserUseCase } from '../../../application/use-cases/RegisterUserUseCase';
 import { LoginUserUseCase } from '../../../application/use-cases/LoginUserUseCase';
-import { DuplicateError, AuthenticationError, ValidationError } from '../../../domain/errors/DomainErrors';
+import { DuplicateError, AuthenticationError } from '../../../domain/errors/DomainErrors';
 import { AuthRequest } from '../../../infrastructure/auth/authMiddleware';
 import { IUserRepository } from '../../../domain/repositories/IUserRepository';
 import { UserId } from '../../../domain/value-objects/UserId';
@@ -23,6 +24,10 @@ export class UserController {
             }
 
             const user = await this.registerUserUseCase.execute({ email, username, password });
+
+            // Auto-login after registration by setting session
+            req.session.userId = user.id.getValue();
+            req.session.email = user.email.getValue();
 
             res.status(201).json({
                 message: 'User registered successfully',
@@ -55,9 +60,12 @@ export class UserController {
 
             const result = await this.loginUserUseCase.execute({ email, password });
 
+            // Set session
+            req.session.userId = result.user.id;
+            req.session.email = result.user.email;
+
             res.status(200).json({
                 message: 'Login successful',
-                token: result.token,
                 user: result.user
             });
         } catch (error) {
@@ -69,6 +77,17 @@ export class UserController {
                 res.status(500).json({ error: 'Internal server error' });
             }
         }
+    };
+
+    logout = async (req: Request, res: Response): Promise<void> => {
+        req.session.destroy((err) => {
+            if (err) {
+                res.status(500).json({ error: 'Failed to logout' });
+                return;
+            }
+            res.clearCookie('connect.sid'); // Default session cookie name
+            res.status(200).json({ message: 'Logout successful' });
+        });
     };
 
     getProfile = async (req: AuthRequest, res: Response): Promise<void> => {
